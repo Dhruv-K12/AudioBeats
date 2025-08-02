@@ -16,6 +16,8 @@ import { useFonts } from "expo-font";
 import CustomSplashScreen from "../Components/CustomSplashScreen";
 import { colors } from "../Constants/colors";
 import MainStack from "./MainStack";
+import BottomSheet from "../Components/BottomSheet";
+import { SafeAreaView } from "react-native-safe-area-context";
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
   const { user, setUser, loading, splashLoading } =

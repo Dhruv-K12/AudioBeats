@@ -1,3 +1,5 @@
+import { songType } from "../Types/types";
+
 export type AuthInputProps = {
   children: React.ReactNode;
   placeholder: string;
@@ -9,4 +11,8 @@ export type AuthInputProps = {
 export type btnProps = {
   text: string;
   onPress: () => void;
+};
+
+export type recommendedSongContainerProps = {
+  item: songType;
 };
