@@ -47,4 +47,6 @@ export type mainCtxType = {
   >;
   loop: boolean;
   setLoop: booleanState;
+  searchVal: string;
+  setSearchVal: stringState;
 };

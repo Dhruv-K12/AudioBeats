@@ -40,6 +40,7 @@ export const MainCtxProvider = ({
   const [selectedPlaylist, setSelectedPlaylist] =
     useState<playlistType | null>(null);
   const [loop, setLoop] = useState(false);
+  const [searchVal, setSearchVal] = useState("");
   const value = {
     player,
     songs,
@@ -71,6 +72,8 @@ export const MainCtxProvider = ({
     setSelectedPlaylist,
     loop,
     setLoop,
+    searchVal,
+    setSearchVal,
   };
   return (
     <MainCtx.Provider value={value}>

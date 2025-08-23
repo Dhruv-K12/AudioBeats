@@ -11,7 +11,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 const PlaylistSongs = ({ route }: any) => {
   const data = route.params.item;
-  console.log(data);
   return (
     <SafeAreaView
       style={{

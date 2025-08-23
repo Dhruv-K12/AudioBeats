@@ -6,7 +6,8 @@ import { fonts } from "../Constants/fonts";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMainCtx } from "../Context/MainContext";
 const HeaderHome = () => {
-  const { playing } = useMainCtx();
+  const { playing, searchVal } = useMainCtx();
+  if (searchVal.trim().length !== 0) return;
   return (
     <View style={styles.container}>
       <LottieView
@@ -21,10 +22,15 @@ const HeaderHome = () => {
           flexDirection: "row",
           justifyContent: "space-between",
           width: "85%",
+          alignItems: "center",
         }}
       >
         <View>
-          <Text style={{ fontFamily: fonts.heading }}>
+          <Text
+            style={{
+              fontFamily: fonts.heading,
+            }}
+          >
             Hello,
           </Text>
           <Text style={styles.greet}>Dhruv</Text>
@@ -48,6 +54,7 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
   },
   logo: {
     width: 60,

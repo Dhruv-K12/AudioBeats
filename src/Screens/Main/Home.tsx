@@ -1,5 +1,10 @@
-import { StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import {
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  TextInput,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { colors } from "../../Constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderHome from "../../Components/HeaderHome";
@@ -13,6 +18,7 @@ import RecentSection from "../../Components/RecentSection";
 import { getRecentSongs } from "../../Storage/getRecentSongs";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { getPlaylist } from "../../Services/getPlaylist";
+import SearchInput from "../../Components/SearchInput";
 const Home = () => {
   const { user } = useAuthCtx();
   const {
@@ -24,6 +30,7 @@ const Home = () => {
     setPlaylist,
   } = useMainCtx();
   const tabBarHeight = useBottomTabBarHeight();
+  const dismissKeyboard = () => Keyboard.dismiss();
   useEffect(() => {
     const unsubscribe: (() => void)[] = [];
     unsubscribe.push(getSongs(setSongs));
@@ -40,13 +47,20 @@ const Home = () => {
       unsubscribe.forEach((unsub) => unsub && unsub());
     };
   }, []);
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: colors.bg }}
     >
-      <HeaderHome />
-      <RecentSection />
-      <RecommededSection />
+      <Pressable
+        style={{ flex: 1 }}
+        onPress={dismissKeyboard}
+      >
+        <HeaderHome />
+        <SearchInput />
+        <RecentSection />
+        <RecommededSection />
+      </Pressable>
     </SafeAreaView>
   );
 };

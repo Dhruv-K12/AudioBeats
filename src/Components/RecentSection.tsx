@@ -14,8 +14,14 @@ import { useNavigation } from "@react-navigation/native";
 import { playSong } from "../Utils/playSong";
 
 const RecentSection = () => {
-  const { recentSongs, currSong, setCurrSong, player } =
-    useMainCtx();
+  const {
+    recentSongs,
+    currSong,
+    setCurrSong,
+    player,
+    searchVal,
+  } = useMainCtx();
+  if (searchVal.trim().length !== 0) return;
   const navigation = useNavigation<navigationType>();
   const playSongHandler = (item: songType) => {
     if (currSong === item) {

@@ -1,4 +1,4 @@
-import { StatusBar, StyleSheet } from "react-native";
+import { StatusBar, StyleSheet, View } from "react-native";
 import React, { useEffect } from "react";
 import AuthStack from "./AuthStack";
 import { NavigationContainer } from "@react-navigation/native";
