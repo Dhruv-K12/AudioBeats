@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   useWindowDimensions,
-  View,
 } from "react-native";
 import React, { useEffect } from "react";
 import { colors } from "../Constants/colors";

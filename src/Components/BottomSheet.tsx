@@ -1,37 +1,296 @@
-import { StyleSheet } from "react-native";
-import React from "react";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { colors } from "../Constants/colors";
 import Animated, {
   interpolate,
+  runOnJS,
   useAnimatedStyle,
+  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import { useMainCtx } from "../Context/MainContext";
 import Entypo from "@expo/vector-icons/Entypo";
+import { fonts } from "../Constants/fonts";
+import {
+  Gesture,
+  GestureDetector,
+} from "react-native-gesture-handler";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import SheetContent from "./SheetContent";
+import { downloadSong } from "../Utils/downloadSong";
+import { useAuthCtx } from "../Context/AuthContext";
+import * as Progress from "react-native-progress";
+import { deleteDownloadedSong } from "../Utils/deleteDownloadedSong";
+import { savePlaylist } from "../Services/savePlaylist";
+import { saveFavourite } from "../Services/saveFavourite";
+import { removeFavourite } from "../Utils/removeFavourite";
+import { songType } from "../Types/types";
+import { saveSongInPlaylist } from "../Services/saveSongInPlaylist";
+import { removeSongFromPlaylist } from "../Services/removeSongFromPlaylist";
 
-const BottomSheet = ({}) => {
-  const { sheetHeight } = useMainCtx();
+const BottomSheet = () => {
+  const { setError, user } = useAuthCtx();
+  const {
+    selectedSong,
+    translateY,
+    downloadedSong,
+    setDownloadedSong,
+    favourite,
+    playlist,
+  } = useMainCtx();
+  const [showplaylist, setShowPlaylist] = useState(false);
+  const [playlistName, setPlaylistName] = useState("");
+  const [progress, setProgress] = useState(0);
+  const { height } = useWindowDimensions();
+  const isSongDownloaded = downloadedSong.some(
+    (song) => song.id == selectedSong?.id
+  );
+  const isFavouriteSong = favourite.some(
+    (song) => song.id === selectedSong?.id
+  );
+
+  const sheetSize = height / 2;
+  const showPlaylist = () => setShowPlaylist(true);
+  const hidePlaylist = () => setShowPlaylist(false);
+  const downloadSongHandler = () =>
+    downloadSong(
+      selectedSong,
+      setProgress,
+      setError,
+      downloadedSong,
+      setDownloadedSong
+    );
+  const deleteSongHandler = async () => {
+    const songs = await deleteDownloadedSong(
+      selectedSong,
+      downloadedSong
+    );
+
+    setDownloadedSong(songs as songType[]);
+  };
+  const addToFavouriteHandler = () =>
+    saveFavourite(user?.uid, selectedSong);
+
+  const removeFavouriteHandler = () =>
+    removeFavourite(user?.uid, selectedSong);
+  const createPlaylistHandler = () => {
+    if (playlistName.trim().length !== 0) {
+      savePlaylist(user?.uid, playlistName);
+    }
+  };
+
+  const slideDown = Gesture.Pan()
+    .onUpdate((e) => {
+      if (e.translationY > 0) {
+        translateY.value = e.translationY;
+      }
+    })
+    .onEnd(() => {
+      if (translateY.value > sheetSize / 2) {
+        translateY.value = withSpring(sheetSize);
+        runOnJS(hidePlaylist)();
+      } else {
+        translateY.value = withSpring(0);
+      }
+    });
   const container = useAnimatedStyle(() => {
     return {
-      height: interpolate(
-        sheetHeight.value,
-        [0, 1],
-        [0, 300]
-      ),
+      height: sheetSize,
       opacity: interpolate(
-        sheetHeight.value,
-        [0, 1],
-        [0, 1]
+        translateY.value,
+        [0, sheetSize],
+        [1, 0.6]
       ),
+      transform: [{ translateY: translateY.value }],
     };
   });
+  useEffect(() => {
+    if (
+      selectedSong &&
+      translateY.value >= 0 &&
+      translateY.value <= sheetSize / 2
+    ) {
+      translateY.value = withTiming(
+        sheetSize / 2,
+        { duration: 300 },
+        (finished) => {
+          if (finished) {
+            translateY.value = withTiming(0);
+          }
+        }
+      );
+    }
+  }, [selectedSong?.id]);
   return (
     <Animated.View style={[styles.container, container]}>
-      <Entypo
-        name="chevron-down"
-        size={30}
-        color={"white"}
-        style={{ alignSelf: "center" }}
-      />
+      <GestureDetector gesture={slideDown}>
+        <TouchableOpacity>
+          <Entypo
+            name="chevron-down"
+            size={30}
+            color="white"
+            style={{ alignSelf: "center" }}
+          />
+        </TouchableOpacity>
+      </GestureDetector>
+      <View style={styles.songContainer}>
+        <Image
+          source={{ uri: selectedSong?.img }}
+          style={styles.img}
+        />
+        <Text style={styles.txt}>{selectedSong?.name}</Text>
+      </View>
+      {!showplaylist ? (
+        <>
+          <SheetContent
+            showArrow
+            onPress={showPlaylist}
+            text="Add To Playlist"
+          >
+            <MaterialIcons
+              name="library-music"
+              size={30}
+              color="white"
+            />
+          </SheetContent>
+          <SheetContent
+            onPress={
+              isSongDownloaded
+                ? deleteSongHandler
+                : downloadSongHandler
+            }
+            text={
+              isSongDownloaded
+                ? "Delete Song"
+                : "Download Song"
+            }
+          >
+            {progress == 0 || progress == 100 ? (
+              <AntDesign
+                name={
+                  isSongDownloaded ? "delete" : "download"
+                }
+                size={30}
+                color="white"
+              />
+            ) : (
+              <Progress.Circle
+                progress={progress}
+                size={30}
+                color="white"
+              />
+            )}
+          </SheetContent>
+          <SheetContent
+            onPress={
+              isFavouriteSong
+                ? removeFavouriteHandler
+                : addToFavouriteHandler
+            }
+            text={
+              isFavouriteSong
+                ? "Remove From Favourite"
+                : "Add To Favourite"
+            }
+          >
+            <AntDesign
+              name={isFavouriteSong ? "heart" : "hearto"}
+              size={30}
+              color="white"
+            />
+          </SheetContent>
+        </>
+      ) : (
+        <>
+          <View style={styles.inputContainer}>
+            <TouchableOpacity onPress={hidePlaylist}>
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color="white"
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your playlist name"
+              value={playlistName}
+              onChangeText={(value) =>
+                setPlaylistName(value)
+              }
+            />
+            <TouchableOpacity
+              onPress={createPlaylistHandler}
+              style={{
+                backgroundColor: "white",
+                borderRadius: 8,
+              }}
+            >
+              <Text
+                style={[
+                  styles.txt,
+                  { color: colors.buttons },
+                ]}
+              >
+                Create
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={playlist}
+            renderItem={({ item }) => {
+              const isPlaylistSongAdded = item.songs?.some(
+                (song) => song.id == selectedSong?.id
+              );
+              const saveSongHandler = () =>
+                isPlaylistSongAdded
+                  ? removeSongFromPlaylist(
+                      item,
+                      user?.uid,
+                      selectedSong,
+                      setError
+                    )
+                  : saveSongInPlaylist(
+                      item,
+                      user?.uid,
+                      selectedSong,
+                      setError
+                    );
+              return (
+                <View style={styles.playlistItem}>
+                  <Text style={styles.txt}>
+                    {item.name}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={saveSongHandler}
+                    style={styles.addIconContainer}
+                  >
+                    <FontAwesome6
+                      name={
+                        isPlaylistSongAdded
+                          ? "trash-can"
+                          : "add"
+                      }
+                      size={24}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
+          />
+        </>
+      )}
     </Animated.View>
   );
 };
@@ -46,5 +305,55 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     position: "absolute",
     bottom: 0,
+  },
+  songContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  img: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    margin: 8,
+  },
+  txt: {
+    color: "white",
+    fontFamily: fonts.heading,
+    margin: 8,
+  },
+  playlistContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 8,
+  },
+  inputContainer: {
+    width: "95%",
+    alignSelf: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 8,
+    justifyContent: "space-between",
+  },
+  input: {
+    backgroundColor: "white",
+    width: "70%",
+    borderRadius: 8,
+    fontFamily: fonts.subHeading,
+    color: colors.buttons,
+  },
+  playlistItem: {
+    width: "95%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 8,
+    alignItems: "center",
+  },
+  addIconContainer: {
+    width: 30,
+    height: 30,
+    backgroundColor: "white",
+    borderRadius: 6,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

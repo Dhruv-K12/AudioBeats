@@ -5,46 +5,62 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { colors } from "../Constants/colors";
 import { fonts } from "../Constants/fonts";
 import { playSong } from "../Utils/playSong";
 import { recommendedSongContainerProps } from "./types";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useMainCtx } from "../Context/MainContext";
-import { withSpring } from "react-native-reanimated";
+import {
+  ReduceMotion,
+  withSpring,
+} from "react-native-reanimated";
 import LottieView from "lottie-react-native";
-
+import { useNavigation } from "@react-navigation/native";
+import { navigationType } from "../Types/types";
 const RecommendedSongContainer = ({
   item,
+  queue,
 }: recommendedSongContainerProps) => {
-  const { player, setCurrSong, sheetHeight, currSong } =
-    useMainCtx();
+  const {
+    player,
+    setCurrSong,
+    currSong,
+    setSelectedSong,
+    translateY,
+    playing,
+    setQueue,
+  } = useMainCtx();
+  const navigation = useNavigation<navigationType>();
   const playSongHandler = () => {
+    if (currSong === item) {
+      navigation.navigate("MusicDetail", {
+        item: item,
+      });
+      return;
+    }
+    setQueue(queue ? queue : []);
     setCurrSong(item);
     playSong(player, item.src);
   };
   const openBottomSheet = () => {
-    sheetHeight.value = withSpring(1);
+    translateY.value = withSpring(0, {
+      stiffness: 10,
+      damping: 100,
+      mass: 0.2,
+      overshootClamping: false,
+      reduceMotion: ReduceMotion.System,
+    });
+    setSelectedSong(item);
   };
-  const refSoundAnimation = useRef<LottieView>(null);
-  useEffect(() => {
-    if (item !== currSong) {
-      return;
-    }
-    if (player.playing) {
-      refSoundAnimation.current?.play();
-    } else {
-      refSoundAnimation.current?.pause();
-    }
-  }, [player.playing]);
   return (
-    <View style={styles.songContainer}>
+    <View style={[styles.songContainer]}>
       <TouchableOpacity
         style={styles.btn}
         onPress={playSongHandler}
       >
-        <View style={styles.songContainer}>
+        <View style={{ flexDirection: "row" }}>
           <Image
             source={{ uri: item.img }}
             style={styles.img}
@@ -62,7 +78,8 @@ const RecommendedSongContainer = ({
               height: 30,
               alignSelf: "center",
             }}
-            ref={refSoundAnimation}
+            autoPlay={playing}
+            loop={playing}
           />
         )}
       </TouchableOpacity>
@@ -84,7 +101,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    margin: 3,
+    marginVertical: 8,
+    borderBottomWidth: 0.8,
+    borderColor: colors.buttons,
   },
   img: {
     width: 60,

@@ -1,9 +1,4 @@
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import AuthStack from "./AuthStack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -17,27 +12,25 @@ import CustomSplashScreen from "../Components/CustomSplashScreen";
 import { colors } from "../Constants/colors";
 import MainStack from "./MainStack";
 import BottomSheet from "../Components/BottomSheet";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { PaperProvider } from "react-native-paper";
+import DialogAction from "../Components/DialogAction";
+
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
-  const { user, setUser, loading, splashLoading } =
-    useAuthCtx();
+  const { user, setUser, splashLoading } = useAuthCtx();
   const [loaded, error] = useFonts({
     "Inter-SemiBold": require("../../assets/Fonts/Inter_18pt-SemiBold.ttf"),
     "Inter-Light": require("../../assets/Fonts/Inter_18pt-Light.ttf"),
   });
 
   useEffect(() => {
-    SplashScreen.hideAsync();
-    onAuthStateChanged(auth, (user) => {
+    SplashScreen.hide();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
       }
     });
-
-    return () => {
-      setUser(undefined);
-    };
+    return unsubscribe;
   }, [user]);
   if (!loaded && !error) {
     return null;
@@ -52,9 +45,19 @@ const Navigation = () => {
   }
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor={colors.bg} />
-      <AlertToast />
-      {user ? <MainStack /> : <AuthStack />}
+      <PaperProvider>
+        <StatusBar backgroundColor={colors.bg} />
+        <AlertToast />
+        <DialogAction />
+        {user ? (
+          <>
+            <MainStack />
+            <BottomSheet />
+          </>
+        ) : (
+          <AuthStack />
+        )}
+      </PaperProvider>
     </NavigationContainer>
   );
 };

@@ -1,16 +1,18 @@
 import { AudioPlayer } from "expo-audio";
 import { songState, songType } from "../Types/types";
-import { playSong } from "./playSong";
 
 export const playPreviousSong = (
   player: AudioPlayer,
   setCurrSong: songState,
-  previousSong: songType | null,
-  currSong: songType | null
+  previousSong: number[],
+  songs: songType[]
 ) => {
-  if (!previousSong || previousSong == currSong) {
-    return;
+  if (previousSong.length > 0) {
+    const previousSongData =
+      songs[previousSong[previousSong.length - 1]];
+    setCurrSong(previousSongData);
+    player.replace(previousSongData.src);
+    player.play();
+    previousSong.pop();
   }
-  setCurrSong(previousSong);
-  playSong(player, previousSong.src);
 };

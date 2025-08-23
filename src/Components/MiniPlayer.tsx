@@ -1,13 +1,13 @@
 import {
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
-import Slider from "@react-native-community/slider";
+import React, { useContext, useEffect } from "react";
 import { useMainCtx } from "../Context/MainContext";
 import { colors } from "../Constants/colors";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -26,37 +26,56 @@ import {
   GestureDetector,
 } from "react-native-gesture-handler";
 import { playPreviousSong } from "../Utils/playPreviousSong";
+import { useNavigation } from "@react-navigation/native";
+import { navigationType } from "../Types/types";
+import { changeSongInQueue } from "../Utils/changeSongInQueue";
+import PlayerSlider from "./PlayerSlider";
 const MiniPlayer = () => {
   const {
-    playerStatus,
     player,
     currSong,
     setCurrSong,
     songs,
     setPrevSong,
     prevSong,
+    queue,
+    isPlaying,
+    tabBarHeight,
   } = useMainCtx();
   const width = useWindowDimensions().width;
+  const navigation = useNavigation<navigationType>();
   const playAndPauseHandler = () => playAndPause(player);
-  const changeSongHandler = () =>
-    changeSong(
+  const changeSongHandler = () => {
+    if (queue.length === 0) {
+      changeSong(
+        player,
+        songs,
+        setCurrSong,
+        currSong,
+        setPrevSong
+      );
+      return;
+    }
+    changeSongInQueue(
       player,
-      songs,
+      queue,
       setCurrSong,
       currSong,
       setPrevSong
     );
+  };
+
   const playPreviousSongHandler = () =>
-    playPreviousSong(
-      player,
-      setCurrSong,
-      prevSong,
-      currSong
-    );
+    playPreviousSong(player, setCurrSong, prevSong, songs);
+  const navigatieToMusicDetail = () =>
+    navigation.navigate("MusicDetail", {
+      item: currSong,
+    });
   const progress = useSharedValue(0);
-  const swipe = useSharedValue(0);
+  const translateX = useSharedValue(0);
   const container = useAnimatedStyle(() => {
     return {
+      bottom: tabBarHeight,
       transform: [
         {
           translateY: interpolate(
@@ -66,86 +85,73 @@ const MiniPlayer = () => {
           ),
         },
         {
-          translateX: swipe.value,
+          translateX: translateX.value,
         },
       ],
     };
   });
   const swipeGesture = Gesture.Pan()
     .onUpdate((e) => {
-      swipe.value = e.translationX;
+      translateX.value = e.translationX;
     })
     .onEnd(() => {
-      if (swipe.value > 100) {
+      if (translateX.value > 100) {
         runOnJS(playPreviousSongHandler)();
-        swipe.value = withSpring(-100);
+        translateX.value = withSpring(-100);
       }
-      if (swipe.value < -100) {
+      if (translateX.value < -100) {
         runOnJS(changeSongHandler)();
-        swipe.value = withSpring(width + 100);
+        translateX.value = withSpring(width + 100);
       }
-      swipe.value = withSpring(0);
+      translateX.value = withSpring(0);
     });
   useEffect(() => {
     if (currSong) {
       progress.value = withSpring(1);
     }
-    if (playerStatus.didJustFinish) {
-      changeSong(
-        player,
-        songs,
-        setCurrSong,
-        currSong,
-        setPrevSong
-      );
-    }
-  }, [currSong, playerStatus.didJustFinish]);
+    return () => {
+      progress.value = withSpring(0);
+      isPlaying(false);
+    };
+  }, [currSong]);
   if (currSong) {
     return (
       <GestureDetector gesture={swipeGesture}>
         <Animated.View
           style={[styles.container, container]}
         >
-          <View style={styles.mainContainer}>
-            <Image
-              source={{ uri: currSong.img }}
-              style={styles.img}
-            />
-            <View style={styles.textContainer}>
-              <Text style={styles.text}>
-                {currSong.name}
-              </Text>
-              <Text style={styles.text}>
-                {currSong.artist}
-              </Text>
+          <Pressable onPress={navigatieToMusicDetail}>
+            <View style={styles.mainContainer}>
+              <Image
+                source={{ uri: currSong.img }}
+                style={styles.img}
+              />
+              <View style={styles.textContainer}>
+                <Text style={styles.text}>
+                  {currSong.name}
+                </Text>
+                <Text style={styles.text}>
+                  {currSong.artist}
+                </Text>
+              </View>
+              <View style={styles.iconContainer}>
+                <TouchableOpacity
+                  onPress={playAndPauseHandler}
+                >
+                  <Entypo
+                    name={
+                      player.playing
+                        ? "controller-paus"
+                        : "controller-play"
+                    }
+                    size={34}
+                    color={colors.rare}
+                  />
+                </TouchableOpacity>
+              </View>
+              <PlayerSlider />
             </View>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity
-                onPress={playAndPauseHandler}
-              >
-                <Entypo
-                  name={
-                    player.playing
-                      ? "controller-paus"
-                      : "controller-play"
-                  }
-                  size={34}
-                  color={colors.rare}
-                />
-              </TouchableOpacity>
-            </View>
-            <Slider
-              value={playerStatus.currentTime}
-              onSlidingComplete={(value) =>
-                player.seekTo(value)
-              }
-              thumbTintColor="transparent"
-              minimumTrackTintColor="white"
-              maximumTrackTintColor="white"
-              maximumValue={player.duration}
-              style={styles.slider}
-            />
-          </View>
+          </Pressable>
         </Animated.View>
       </GestureDetector>
     );
@@ -157,7 +163,7 @@ export default MiniPlayer;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
+    position: "absolute",
     alignItems: "center",
   },
   mainContainer: {
@@ -192,7 +198,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
-    width: "85%",
+    width: "80%",
   },
   animation: {
     width: 30,

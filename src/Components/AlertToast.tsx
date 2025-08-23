@@ -5,9 +5,11 @@ import Foundation from "@expo/vector-icons/Foundation";
 import { fonts } from "../Constants/fonts";
 import { useAuthCtx } from "../Context/AuthContext";
 import Animated, {
+  ReduceMotion,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
 } from "react-native-reanimated";
 
@@ -23,11 +25,18 @@ const AlertToast = () => {
   });
   useEffect(() => {
     if (error.trim().length !== 0) {
-      progress.value = withSpring(1, {}, (finsihed) => {
-        if (finsihed) runOnJS(resetError)();
-      });
-    } else {
-      progress.value = withSpring(0);
+      progress.value = withSequence(
+        withSpring(1, {
+          stiffness: 10,
+          damping: 80,
+          mass: 0.3,
+          overshootClamping: true,
+          reduceMotion: ReduceMotion.System,
+        }),
+        withSpring(0, {}, (finished) => {
+          if (finished) runOnJS(resetError)();
+        })
+      );
     }
   }, [error]);
   return (
@@ -52,7 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 20,
     padding: 16,
-    top: 5,
+    top: 10,
   },
   text: {
     width: "80%",

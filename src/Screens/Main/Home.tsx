@@ -1,42 +1,56 @@
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { colors } from "../../Constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderHome from "../../Components/HeaderHome";
 import RecommededSection from "../../Components/RecommededSection";
-import MiniPlayer from "../../Components/MiniPlayer";
 import { getSongs } from "../../Services/getSongs";
 import { useMainCtx } from "../../Context/MainContext";
-import BottomSheet from "../../Components/BottomSheet";
-import { withSpring } from "react-native-reanimated";
+import { getDownloadedSong } from "../../Storage/getDownloadedSong";
+import { getFavourite } from "../../Services/getFavourite";
+import { useAuthCtx } from "../../Context/AuthContext";
+import RecentSection from "../../Components/RecentSection";
+import { getRecentSongs } from "../../Storage/getRecentSongs";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { getPlaylist } from "../../Services/getPlaylist";
 const Home = () => {
-  const { setSongs, sheetHeight } = useMainCtx();
-  const closeBottomSheet = () => {
-    sheetHeight.value = withSpring(0);
-  };
+  const { user } = useAuthCtx();
+  const {
+    setTabBarHeight,
+    setSongs,
+    setDownloadedSong,
+    setFavourite,
+    setRecentSongs,
+    setPlaylist,
+  } = useMainCtx();
+  const tabBarHeight = useBottomTabBarHeight();
   useEffect(() => {
-    getSongs(setSongs);
+    const unsubscribe: (() => void)[] = [];
+    unsubscribe.push(getSongs(setSongs));
+    if (user?.uid) {
+      unsubscribe.push(
+        getFavourite(user?.uid, setFavourite)
+      );
+      unsubscribe.push(getPlaylist(user?.uid, setPlaylist));
+    }
+    setTabBarHeight(tabBarHeight);
+    getDownloadedSong(setDownloadedSong);
+    getRecentSongs(setRecentSongs);
+    return () => {
+      unsubscribe.forEach((unsub) => unsub && unsub());
+    };
   }, []);
   return (
-    <SafeAreaView style={styles.container}>
-      <Pressable
-        onPress={closeBottomSheet}
-        style={styles.container}
-      >
-        <HeaderHome />
-        <RecommededSection />
-        <MiniPlayer />
-        <BottomSheet />
-      </Pressable>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: colors.bg }}
+    >
+      <HeaderHome />
+      <RecentSection />
+      <RecommededSection />
     </SafeAreaView>
   );
 };
 
 export default Home;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bg,
-  },
-});
+const styles = StyleSheet.create({});

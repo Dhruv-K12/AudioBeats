@@ -15,4 +15,23 @@ export type btnProps = {
 
 export type recommendedSongContainerProps = {
   item: songType;
+  id: number | undefined;
+  queue?: songType[];
+};
+
+export type sheetContent = {
+  text: string;
+  onPress: () => void;
+  children: React.ReactNode;
+  showArrow?: boolean;
+};
+
+export type PlayerSliderProps = {
+  showDuration?: boolean;
+};
+
+export type mySongContainerProps = {
+  children: React.ReactNode;
+  text: string;
+  onPress: () => void;
 };

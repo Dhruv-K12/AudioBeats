@@ -2,18 +2,19 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { colors } from "../Constants/colors";
 import LottieView from "lottie-react-native";
-import { useAuthCtx } from "../Context/AuthContext";
 import { fonts } from "../Constants/fonts";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useMainCtx } from "../Context/MainContext";
 const HeaderHome = () => {
-  const { user } = useAuthCtx();
+  const { playing } = useMainCtx();
   return (
     <View style={styles.container}>
       <LottieView
         source={require("../../assets/Animation/Logo.json")}
         style={styles.logo}
-        autoPlay={true}
-        speed={2}
+        autoPlay={playing}
+        loop={playing}
+        speed={3}
       />
       <View
         style={{
@@ -23,7 +24,9 @@ const HeaderHome = () => {
         }}
       >
         <View>
-          <Text style={styles.greet}>Hello,</Text>
+          <Text style={{ fontFamily: fonts.heading }}>
+            Hello,
+          </Text>
           <Text style={styles.greet}>Dhruv</Text>
         </View>
         <Ionicons
