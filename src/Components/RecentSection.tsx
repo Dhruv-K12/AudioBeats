@@ -12,15 +12,12 @@ import { fonts } from "../Constants/fonts";
 import { navigationType, songType } from "../Types/types";
 import { useNavigation } from "@react-navigation/native";
 import { playSong } from "../Utils/playSong";
+import { usethemeStore } from "../Store/themeStore";
 
 const RecentSection = () => {
-  const {
-    recentSongs,
-    currSong,
-    setCurrSong,
-    player,
-    searchVal,
-  } = useMainCtx();
+  const colors = usethemeStore((state) => state.theme);
+  const { recentSongs, currSong, setCurrSong, player, searchVal } =
+    useMainCtx();
   if (searchVal.trim().length !== 0) return;
   const navigation = useNavigation<navigationType>();
   const playSongHandler = (item: songType) => {
@@ -36,7 +33,9 @@ const RecentSection = () => {
   if (recentSongs.length !== 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.heading}>Recently played</Text>
+        <Text style={[styles.heading, { color: colors.primaryText }]}>
+          Recently played
+        </Text>
         <FlatList
           data={recentSongs}
           horizontal
@@ -46,11 +45,8 @@ const RecentSection = () => {
               onPress={() => playSongHandler(item)}
               style={styles.btn}
             >
-              <Image
-                source={{ uri: item.img }}
-                style={styles.img}
-              />
-              <Text>{item.name}</Text>
+              <Image source={{ uri: item.img }} style={styles.img} />
+              <Text style={{ color: colors.primaryText }}>{item.name}</Text>
             </TouchableOpacity>
           )}
         />
@@ -59,11 +55,9 @@ const RecentSection = () => {
   }
 };
 
-export default RecentSection;
-
 const styles = StyleSheet.create({
   container: {
-    margin: 8,
+    marginLeft: 8,
   },
   heading: {
     fontFamily: fonts.heading,
@@ -79,3 +73,4 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
 });
+export default RecentSection;

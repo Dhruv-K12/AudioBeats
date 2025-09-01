@@ -6,8 +6,7 @@ export type routeAuthStackParamList = {
   Login: undefined;
   SignUp: undefined;
 };
-export type navigationType =
-  NativeStackNavigationProp<routeAuthStackParamList>;
+export type navigationType = NativeStackNavigationProp<routeAuthStackParamList>;
 
 export type rootMainStackParmList = {
   Main: undefined;
@@ -21,4 +20,5 @@ export type rootMainStackParmList = {
   PlaylistSongs: {
     item: songType[] | null;
   };
+  Settings: undefined;
 };

@@ -8,39 +8,28 @@ import { useWindowDimensions } from "react-native";
 
 const MainCtx = createContext<null | mainCtxType>(null);
 
-export const MainCtxProvider = ({
-  children,
-}: authCtxProp) => {
+export const MainCtxProvider = ({ children }: authCtxProp) => {
   const player = useAudioPlayer("");
   const [tabBarHeight, setTabBarHeight] = useState(0);
   const [songs, setSongs] = useState<songType[]>([]);
-  const [currSong, setCurrSong] = useState<songType | null>(
-    null
-  );
+  const [currSong, setCurrSong] = useState<songType | null>(null);
   const [prevSong, setPrevSong] = useState<number[]>([]);
-  const [selectedSong, setSelectedSong] =
-    useState<songType | null>(null);
-  const [downloadedSong, setDownloadedSong] = useState<
-    songType[]
-  >([]);
-  const [favourite, setFavourite] = useState<songType[]>(
-    []
-  );
-  const [recentSongs, setRecentSongs] = useState<
-    songType[]
-  >([]);
+  const [selectedSong, setSelectedSong] = useState<songType | null>(null);
+  const [downloadedSong, setDownloadedSong] = useState<songType[]>([]);
+  const [favourite, setFavourite] = useState<songType[]>([]);
+  const [recentSongs, setRecentSongs] = useState<songType[]>([]);
   const [playing, isPlaying] = useState(false);
   const height = useWindowDimensions().height;
   const translateY = useSharedValue(height / 2);
   const [queue, setQueue] = useState<songType[]>([]);
-  const [playlist, setPlaylist] = useState<playlistType[]>(
-    []
-  );
+  const [playlist, setPlaylist] = useState<playlistType[]>([]);
   const [dialogAction, setDialogAction] = useState("");
-  const [selectedPlaylist, setSelectedPlaylist] =
-    useState<playlistType | null>(null);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<playlistType | null>(
+    null
+  );
   const [loop, setLoop] = useState(false);
   const [searchVal, setSearchVal] = useState("");
+
   const value = {
     player,
     songs,
@@ -75,11 +64,7 @@ export const MainCtxProvider = ({
     searchVal,
     setSearchVal,
   };
-  return (
-    <MainCtx.Provider value={value}>
-      {children}
-    </MainCtx.Provider>
-  );
+  return <MainCtx.Provider value={value}>{children}</MainCtx.Provider>;
 };
 
 export const useMainCtx = () => {

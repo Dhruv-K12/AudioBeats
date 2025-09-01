@@ -32,13 +32,9 @@ export type mainCtxType = {
   queue: songType[];
   setQueue: songsState;
   tabBarHeight: number;
-  setTabBarHeight: React.Dispatch<
-    React.SetStateAction<number>
-  >;
+  setTabBarHeight: React.Dispatch<React.SetStateAction<number>>;
   playlist: playlistType[];
-  setPlaylist: React.Dispatch<
-    React.SetStateAction<playlistType[]>
-  >;
+  setPlaylist: React.Dispatch<React.SetStateAction<playlistType[]>>;
   dialogAction: string;
   setDialogAction: stringState;
   selectedPlaylist: playlistType | null;

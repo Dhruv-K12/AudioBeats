@@ -1,14 +1,12 @@
 import {
   ActivityIndicator,
   Pressable,
-  StyleSheet,
   Text,
   useWindowDimensions,
+  StyleSheet,
 } from "react-native";
 import React, { useEffect } from "react";
-import { colors } from "../Constants/colors";
 import { btnProps } from "./types";
-import { fonts } from "../Constants/fonts";
 import { useAuthCtx } from "../Context/AuthContext";
 import Animated, {
   interpolate,
@@ -16,6 +14,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { colors } from "../Constants/colors";
+import { fonts } from "../Constants/fonts";
 
 const Button = ({ text, onPress }: btnProps) => {
   const { loading } = useAuthCtx();
@@ -23,20 +23,11 @@ const Button = ({ text, onPress }: btnProps) => {
   const progress = useSharedValue(0);
   const container = useAnimatedStyle(() => {
     return {
-      width: interpolate(
-        progress.value,
-        [0, 1],
-        [width / 2, width / 4]
-      ),
-      borderRadius: interpolate(
-        progress.value,
-        [0, 1],
-        [12, width / 4]
-      ),
+      width: interpolate(progress.value, [0, 1], [width / 2, width / 4]),
+      borderRadius: interpolate(progress.value, [0, 1], [12, width / 4]),
     };
   });
-  const AnimatedPressable =
-    Animated.createAnimatedComponent(Pressable);
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   useEffect(() => {
     if (loading) {
       progress.value = withSpring(1);
@@ -58,9 +49,6 @@ const Button = ({ text, onPress }: btnProps) => {
     </AnimatedPressable>
   );
 };
-
-export default Button;
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.buttons,
@@ -73,6 +61,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: fonts.heading,
-    color: "white",
+    color: colors.secondaryText,
   },
 });
+
+export default Button;

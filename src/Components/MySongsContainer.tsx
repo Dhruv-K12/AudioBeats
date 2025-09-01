@@ -1,8 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { colors } from "../Constants/colors";
 import { fonts } from "../Constants/fonts";
@@ -16,7 +12,7 @@ const MySongsContainer = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.buttons }]}
     >
       {children}
       <Text style={styles.text}>{text}</Text>
@@ -30,7 +26,7 @@ const styles = StyleSheet.create({
     width: "45%",
     height: 200,
     borderRadius: 12,
-    backgroundColor: colors.buttons,
+
     margin: 8,
     elevation: 20,
     alignItems: "center",

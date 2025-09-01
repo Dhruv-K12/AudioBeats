@@ -7,12 +7,10 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import React, { useContext, useEffect } from "react";
-import { useMainCtx } from "../Context/MainContext";
-import { colors } from "../Constants/colors";
+import React, { useEffect } from "react";
+import { useMainCtx } from "../../Context/MainContext";
 import Entypo from "@expo/vector-icons/Entypo";
-import { fonts } from "../Constants/fonts";
-import { playAndPause } from "../Utils/playAndPause";
+import { playAndPause } from "../../Utils/playAndPause";
 import Animated, {
   interpolate,
   runOnJS,
@@ -20,17 +18,19 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { changeSong } from "../Utils/changeSong";
-import {
-  Gesture,
-  GestureDetector,
-} from "react-native-gesture-handler";
-import { playPreviousSong } from "../Utils/playPreviousSong";
+import { changeSong } from "../../Utils/changeSong";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { playPreviousSong } from "../../Utils/playPreviousSong";
 import { useNavigation } from "@react-navigation/native";
-import { navigationType } from "../Types/types";
-import { changeSongInQueue } from "../Utils/changeSongInQueue";
-import PlayerSlider from "./PlayerSlider";
+import { navigationType } from "../../Types/types";
+import { changeSongInQueue } from "../../Utils/changeSongInQueue";
+import PlayerSlider from ".././PlayerSlider";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { usethemeStore } from "../../Store/themeStore";
+import { getStyles } from "./Style";
 const MiniPlayer = () => {
+  const colors = usethemeStore((state) => state.theme);
+  const styles = getStyles(colors);
   const {
     player,
     currSong,
@@ -43,26 +43,15 @@ const MiniPlayer = () => {
     tabBarHeight,
   } = useMainCtx();
   const width = useWindowDimensions().width;
+  const Bottominsets = useSafeAreaInsets().bottom;
   const navigation = useNavigation<navigationType>();
   const playAndPauseHandler = () => playAndPause(player);
   const changeSongHandler = () => {
     if (queue.length === 0) {
-      changeSong(
-        player,
-        songs,
-        setCurrSong,
-        currSong,
-        setPrevSong
-      );
+      changeSong(player, songs, setCurrSong, currSong, setPrevSong);
       return;
     }
-    changeSongInQueue(
-      player,
-      queue,
-      setCurrSong,
-      currSong,
-      setPrevSong
-    );
+    changeSongInQueue(player, queue, setCurrSong, currSong, setPrevSong);
   };
 
   const playPreviousSongHandler = () =>
@@ -75,14 +64,10 @@ const MiniPlayer = () => {
   const translateX = useSharedValue(0);
   const container = useAnimatedStyle(() => {
     return {
-      bottom: tabBarHeight,
+      bottom: tabBarHeight + Bottominsets,
       transform: [
         {
-          translateY: interpolate(
-            progress.value,
-            [0, 1],
-            [100, 0]
-          ),
+          translateY: interpolate(progress.value, [0, 1], [100, 0]),
         },
         {
           translateX: translateX.value,
@@ -117,32 +102,19 @@ const MiniPlayer = () => {
   if (currSong) {
     return (
       <GestureDetector gesture={swipeGesture}>
-        <Animated.View
-          style={[styles.container, container]}
-        >
+        <Animated.View style={[styles.container, container]}>
           <Pressable onPress={navigatieToMusicDetail}>
             <View style={styles.mainContainer}>
-              <Image
-                source={{ uri: currSong.img }}
-                style={styles.img}
-              />
+              <Image source={{ uri: currSong.img }} style={styles.img} />
               <View style={styles.textContainer}>
-                <Text style={styles.text}>
-                  {currSong.name}
-                </Text>
-                <Text style={styles.text}>
-                  {currSong.artist}
-                </Text>
+                <Text style={styles.text}>{currSong.name}</Text>
+                <Text style={styles.text}>{currSong.artist}</Text>
               </View>
               <View style={styles.iconContainer}>
-                <TouchableOpacity
-                  onPress={playAndPauseHandler}
-                >
+                <TouchableOpacity onPress={playAndPauseHandler}>
                   <Entypo
                     name={
-                      player.playing
-                        ? "controller-paus"
-                        : "controller-play"
+                      player.playing ? "controller-paus" : "controller-play"
                     }
                     size={34}
                     color={colors.rare}
@@ -157,51 +129,4 @@ const MiniPlayer = () => {
     );
   }
 };
-
 export default MiniPlayer;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: "absolute",
-    alignItems: "center",
-  },
-  mainContainer: {
-    width: "95%",
-    height: 70,
-    backgroundColor: colors.buttons,
-    borderRadius: 12,
-    margin: 4,
-    flexDirection: "row",
-    elevation: 12,
-    justifyContent: "space-between",
-  },
-  img: {
-    width: 70,
-    height: 70,
-    borderRadius: 12,
-  },
-  textContainer: {
-    margin: 8,
-  },
-  text: {
-    fontFamily: fonts.subHeading,
-    color: "white",
-  },
-  iconContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "40%",
-  },
-  slider: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: "80%",
-  },
-  animation: {
-    width: 30,
-    height: 30,
-  },
-});

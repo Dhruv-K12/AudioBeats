@@ -1,13 +1,7 @@
-import {
-  Keyboard,
-  Pressable,
-  StyleSheet,
-  TextInput,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { colors } from "../../Constants/colors";
+import { Keyboard, Pressable } from "react-native";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HeaderHome from "../../Components/HeaderHome";
+import HeaderHome from "../../Components/HeaderHome/HeaderHome";
 import RecommededSection from "../../Components/RecommededSection";
 import { getSongs } from "../../Services/getSongs";
 import { useMainCtx } from "../../Context/MainContext";
@@ -19,8 +13,10 @@ import { getRecentSongs } from "../../Storage/getRecentSongs";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { getPlaylist } from "../../Services/getPlaylist";
 import SearchInput from "../../Components/SearchInput";
+import { usethemeStore } from "../../Store/themeStore";
 const Home = () => {
   const { user } = useAuthCtx();
+  const colors = usethemeStore((state) => state.theme);
   const {
     setTabBarHeight,
     setSongs,
@@ -35,9 +31,7 @@ const Home = () => {
     const unsubscribe: (() => void)[] = [];
     unsubscribe.push(getSongs(setSongs));
     if (user?.uid) {
-      unsubscribe.push(
-        getFavourite(user?.uid, setFavourite)
-      );
+      unsubscribe.push(getFavourite(user?.uid, setFavourite));
       unsubscribe.push(getPlaylist(user?.uid, setPlaylist));
     }
     setTabBarHeight(tabBarHeight);
@@ -49,13 +43,8 @@ const Home = () => {
   }, []);
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: colors.bg }}
-    >
-      <Pressable
-        style={{ flex: 1 }}
-        onPress={dismissKeyboard}
-      >
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
+      <Pressable style={{ flex: 1 }} onPress={dismissKeyboard}>
         <HeaderHome />
         <SearchInput />
         <RecentSection />
@@ -66,5 +55,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const styles = StyleSheet.create({});

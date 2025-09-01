@@ -1,16 +1,12 @@
 import { initializeApp } from "firebase/app";
-import {
-  initializeAuth,
-  getReactNativePersistence,
-} from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA2nnQo8e6h13mdjJVm9NPcvMcJFuGwR-E",
   authDomain: "note-app-f189a.firebaseapp.com",
-  databaseURL:
-    "https://note-app-f189a-default-rtdb.firebaseio.com",
+  databaseURL: "https://note-app-f189a-default-rtdb.firebaseio.com",
   projectId: "note-app-f189a",
   storageBucket: "note-app-f189a.firebasestorage.app",
   messagingSenderId: "689087539165",
@@ -20,8 +16,6 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(
-    ReactNativeAsyncStorage
-  ),
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 export const db = getFirestore(app);

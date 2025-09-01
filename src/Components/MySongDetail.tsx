@@ -3,7 +3,7 @@ import React from "react";
 import { colors } from "../Constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fonts } from "../Constants/fonts";
-import RecommendedSongContainer from "./RecommendedSongContainer";
+import RecommendedSongContainer from "./RecommendedSongContainer/RecommendedSongContainer";
 
 const MySongDetail = ({ route }: any) => {
   const { item, name } = route.params;
@@ -14,11 +14,7 @@ const MySongDetail = ({ route }: any) => {
       <FlatList
         data={item}
         renderItem={({ item }) => (
-          <RecommendedSongContainer
-            item={item}
-            id={item.id}
-            queue={queue}
-          />
+          <RecommendedSongContainer item={item} id={item.id} queue={queue} />
         )}
       />
     </SafeAreaView>

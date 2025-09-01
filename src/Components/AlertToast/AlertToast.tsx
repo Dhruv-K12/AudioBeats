@@ -1,9 +1,7 @@
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 import React, { useEffect } from "react";
-import { colors } from "../Constants/colors";
 import Foundation from "@expo/vector-icons/Foundation";
-import { fonts } from "../Constants/fonts";
-import { useAuthCtx } from "../Context/AuthContext";
+import { useAuthCtx } from "../../Context/AuthContext";
 import Animated, {
   ReduceMotion,
   runOnJS,
@@ -12,13 +10,19 @@ import Animated, {
   withSequence,
   withSpring,
 } from "react-native-reanimated";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { getStyles } from "./Style";
+import { usethemeStore } from "../../Store/themeStore";
 const AlertToast = () => {
   const { error, setError } = useAuthCtx();
+  const colors = usethemeStore((state) => state.theme);
+  const styles = getStyles(colors);
+  const topInsert = useSafeAreaInsets().top;
   const progress = useSharedValue(0);
   const resetError = () => setError("");
   const containerStyle = useAnimatedStyle(() => {
     return {
+      top: topInsert,
       transform: [{ scale: progress.value }],
       opacity: progress.value,
     };
@@ -41,32 +45,13 @@ const AlertToast = () => {
   }, [error]);
   return (
     <Animated.View
+      pointerEvents="none"
       style={[styles.container, containerStyle]}
     >
-      <Foundation name="alert" size={30} color="white" />
+      <Foundation name="alert" size={30} color={colors.secondaryText} />
       <Text style={styles.text}>{error}</Text>
     </Animated.View>
   );
 };
 
 export default AlertToast;
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    alignSelf: "center",
-    backgroundColor: colors.buttons,
-    zIndex: 999,
-    alignItems: "center",
-    flexDirection: "row",
-    borderRadius: 20,
-    padding: 16,
-    top: 10,
-  },
-  text: {
-    width: "80%",
-    color: "white",
-    fontFamily: fonts.heading,
-    textAlign: "center",
-  },
-});

@@ -1,24 +1,13 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { sheetContent } from "./types";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { fonts } from "../Constants/fonts";
-const SheetContent = ({
-  text,
-  onPress,
-  showArrow,
-  children,
-}: sheetContent) => {
+import { usethemeStore } from "../Store/themeStore";
+const SheetContent = ({ text, onPress, showArrow, children }: sheetContent) => {
+  const textColor = usethemeStore((state) => state.theme.secondaryText);
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={styles.container}
-    >
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       <View
         style={{
           flexDirection: "row",
@@ -26,15 +15,9 @@ const SheetContent = ({
         }}
       >
         {children}
-        <Text style={styles.text}>{text}</Text>
+        <Text style={[styles.text, { color: textColor }]}>{text}</Text>
       </View>
-      {showArrow && (
-        <AntDesign
-          name="arrowright"
-          size={24}
-          color="white"
-        />
-      )}
+      {showArrow && <AntDesign name="arrowright" size={24} color={textColor} />}
     </TouchableOpacity>
   );
 };
@@ -48,7 +31,6 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   text: {
-    color: "white",
     fontFamily: fonts.subHeading,
     margin: 8,
   },

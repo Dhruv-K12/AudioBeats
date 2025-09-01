@@ -1,28 +1,23 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import React from "react";
-import { colors } from "../Constants/colors";
-import { fonts } from "../Constants/fonts";
-import { playSong } from "../Utils/playSong";
-import { recommendedSongContainerProps } from "./types";
+import { playSong } from "../../Utils/playSong";
+import { recommendedSongContainerProps } from "../types";
 import Entypo from "@expo/vector-icons/Entypo";
-import { useMainCtx } from "../Context/MainContext";
-import {
-  ReduceMotion,
-  withSpring,
-} from "react-native-reanimated";
+import { useMainCtx } from "../../Context/MainContext";
+import { ReduceMotion, withSpring } from "react-native-reanimated";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
-import { navigationType } from "../Types/types";
+import { navigationType } from "../../Types/types";
+import { colors } from "../../Constants/colors";
+import { fonts } from "../../Constants/fonts";
+import { usethemeStore } from "../../Store/themeStore";
+import { getStyles } from "./Style";
 const RecommendedSongContainer = ({
   item,
   queue,
 }: recommendedSongContainerProps) => {
+  const colors = usethemeStore((state) => state.theme);
+  const styles = getStyles(colors);
   const {
     player,
     setCurrSong,
@@ -56,15 +51,9 @@ const RecommendedSongContainer = ({
   };
   return (
     <View style={[styles.songContainer]}>
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={playSongHandler}
-      >
+      <TouchableOpacity style={styles.btn} onPress={playSongHandler}>
         <View style={{ flexDirection: "row" }}>
-          <Image
-            source={{ uri: item.img }}
-            style={styles.img}
-          />
+          <Image source={{ uri: item.img }} style={styles.img} />
           <View style={styles.textContainer}>
             <Text style={styles.text}>{item.name}</Text>
             <Text style={styles.text}>{item.artist}</Text>
@@ -72,54 +61,21 @@ const RecommendedSongContainer = ({
         </View>
         {currSong === item && (
           <LottieView
-            source={require("../../assets/Animation/Sound Visualizer.json")}
             style={{
               width: 30,
               height: 30,
               alignSelf: "center",
             }}
+            source={colors.visualizer}
             autoPlay={playing}
             loop={playing}
           />
         )}
       </TouchableOpacity>
       <TouchableOpacity onPress={openBottomSheet}>
-        <Entypo
-          name="dots-three-vertical"
-          size={24}
-          color={colors.buttons}
-        />
+        <Entypo name="dots-three-vertical" size={24} color={colors.buttons} />
       </TouchableOpacity>
     </View>
   );
 };
-
 export default RecommendedSongContainer;
-
-const styles = StyleSheet.create({
-  songContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginVertical: 8,
-    borderBottomWidth: 0.8,
-    borderColor: colors.buttons,
-  },
-  img: {
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-  },
-  textContainer: {
-    margin: 5,
-  },
-  text: {
-    color: colors.buttons,
-    fontFamily: fonts.subHeading,
-  },
-  btn: {
-    flexDirection: "row",
-    width: "90%",
-    justifyContent: "space-between",
-  },
-});

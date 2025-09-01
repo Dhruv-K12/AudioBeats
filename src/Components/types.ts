@@ -35,3 +35,8 @@ export type mySongContainerProps = {
   text: string;
   onPress: () => void;
 };
+export type SettingOptionProps = {
+  children: React.ReactNode;
+  title: string;
+  onPress: () => void;
+};

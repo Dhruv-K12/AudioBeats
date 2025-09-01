@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
 import { useAuthCtx } from "../Context/AuthContext";
+import { usethemeStore } from "../Store/themeStore";
 
 const CustomSplashScreen = () => {
+  const splashImg = usethemeStore((state) => state.theme.splashScreen);
   const { setSplashLoading } = useAuthCtx();
   return (
     <LottieView
       style={styles.container}
-      source={require("../../assets/Animation/Splash Screen.json")}
+      source={splashImg}
       autoPlay
       loop={false}
       onAnimationFinish={() => setSplashLoading(false)}

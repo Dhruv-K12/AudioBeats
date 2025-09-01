@@ -1,6 +1,7 @@
 export const colors = {
   bg: "#C5BAFF",
-  text: "#000000",
+  primaryText: "#000000",
+  secondaryText: "white",
   buttons: "#372772",
   rare: "#FFCCE5",
 };

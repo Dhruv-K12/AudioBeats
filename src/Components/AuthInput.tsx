@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { AuthInputProps } from "./types";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -31,11 +26,7 @@ const AuthInput = ({
       />
       {showPassword && (
         <TouchableOpacity onPress={togglePassword}>
-          <Ionicons
-            name={pass ? "eye" : "eye-off"}
-            size={24}
-            color="black"
-          />
+          <Ionicons name={pass ? "eye" : "eye-off"} size={24} color="black" />
         </TouchableOpacity>
       )}
     </View>
@@ -57,7 +48,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginLeft: 8,
-    color: colors.buttons,
+    color: colors.bg,
     width: "80%",
     height: 60,
     fontFamily: fonts.heading,

@@ -1,22 +1,16 @@
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { fonts } from "../Constants/fonts";
-import RecommendedSongContainer from "./RecommendedSongContainer";
+import RecommendedSongContainer from "./RecommendedSongContainer/RecommendedSongContainer";
 import { useMainCtx } from "../Context/MainContext";
 import { songType } from "../Types/types";
 import { searchSong } from "../Services/searchSong";
+import { usethemeStore } from "../Store/themeStore";
 
 const RecommededSection = () => {
-  const { songs, currSong } = useMainCtx();
-  const [searchData, setSearchData] = useState<songType[]>(
-    []
-  );
-  const { searchVal } = useMainCtx();
+  const colors = usethemeStore((state) => state.theme);
+  const { songs, currSong, searchVal } = useMainCtx();
+  const [searchData, setSearchData] = useState<songType[]>([]);
   useEffect(() => {
     if (searchVal.trim().length !== 0) {
       searchSong(setSearchData, searchVal);
@@ -26,24 +20,21 @@ const RecommededSection = () => {
     <View
       style={[
         styles.container,
-        { flex: currSong ? 0.85 : 1 },
+        {
+          flex: currSong ? 0.85 : 1,
+        },
       ]}
     >
       {searchVal.trim().length == 0 && (
-        <Text style={styles.heading}>
+        <Text style={[styles.heading, { color: colors.primaryText }]}>
           Recommeded for you
         </Text>
       )}
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={
-          searchVal.trim().length === 0 ? songs : searchData
-        }
+        data={searchVal.trim().length === 0 ? songs : searchData}
         renderItem={({ item }) => (
-          <RecommendedSongContainer
-            item={item}
-            id={item.id}
-          />
+          <RecommendedSongContainer item={item} id={item.id} />
         )}
       />
     </View>

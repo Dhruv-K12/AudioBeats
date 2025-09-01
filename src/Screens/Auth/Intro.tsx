@@ -1,22 +1,15 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "../../Constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import LottieView from "lottie-react-native";
 import { introProps } from "./type";
+import { colors } from "../../Constants/colors";
 import { fonts } from "../../Constants/fonts";
 
 const Intro = ({ navigation }: introProps) => {
-  const navigateToLogin = () =>
-    navigation.navigate("Login");
-  const navigateToSignUp = () =>
-    navigation.navigate("SignUp");
+  const navigateToLogin = () => navigation.navigate("Login");
+  const navigateToSignUp = () => navigation.navigate("SignUp");
   return (
     <SafeAreaView style={styles.container}>
       <LottieView
@@ -27,12 +20,10 @@ const Intro = ({ navigation }: introProps) => {
       />
       <Text style={styles.title}>AudioBeats</Text>
       <Text style={styles.description}>
-        AudipBeats is your personal music companion —
-        simple, stylish, and immersive. Whether you’re
-        relaxing, studying, working out, or just vibing,
-        AuraBeat delivers the perfect sound experience. With
-        a clean design and smooth controls, enjoy your music
-        anytime, anywhere.
+        AudipBeats is your personal music companion — simple, stylish, and
+        immersive. Whether you’re relaxing, studying, working out, or just
+        vibing, AuraBeat delivers the perfect sound experience. With a clean
+        design and smooth controls, enjoy your music anytime, anywhere.
       </Text>
       <View
         style={{
@@ -41,29 +32,17 @@ const Intro = ({ navigation }: introProps) => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={navigateToSignUp}
-        >
+        <TouchableOpacity style={styles.btn} onPress={navigateToSignUp}>
           <Text style={styles.btnText}>Get Started</Text>
-          <AntDesign
-            name="arrowright"
-            size={24}
-            color="white"
-          />
+          <AntDesign name="arrowright" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity onPress={navigateToLogin}>
-          <Text style={styles.text}>
-            Already have an account?Login
-          </Text>
+          <Text style={styles.text}>Already have an account?Login</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
-
-export default Intro;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -76,13 +55,14 @@ const styles = StyleSheet.create({
     height: "30%",
   },
   title: {
-    color: colors.text,
+    color: colors.primaryText,
     fontSize: 16,
     margin: 12,
     fontFamily: fonts.heading,
   },
   description: {
     fontFamily: fonts.subHeading,
+    color: colors.primaryText,
   },
   btn: {
     width: "95%",
@@ -97,9 +77,11 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   btnText: {
-    color: "white",
+    color: colors.secondaryText,
   },
   text: {
-    color: colors.text,
+    color: colors.primaryText,
   },
 });
+
+export default Intro;

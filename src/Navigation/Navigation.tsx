@@ -1,22 +1,22 @@
-import { StatusBar, StyleSheet, View } from "react-native";
+import { StatusBar } from "react-native";
 import React, { useEffect } from "react";
 import AuthStack from "./AuthStack";
 import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useAuthCtx } from "../Context/AuthContext";
-import AlertToast from "../Components/AlertToast";
+import AlertToast from "../Components/AlertToast/AlertToast";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import CustomSplashScreen from "../Components/CustomSplashScreen";
-import { colors } from "../Constants/colors";
 import MainStack from "./MainStack";
-import BottomSheet from "../Components/BottomSheet";
+import BottomSheet from "../Components/BottomSheet/BottomSheet";
 import { PaperProvider } from "react-native-paper";
 import DialogAction from "../Components/DialogAction";
-
+import { usethemeStore } from "../Store/themeStore";
 SplashScreen.preventAutoHideAsync();
 const Navigation = () => {
+  const colors = usethemeStore((state) => state.theme);
   const { user, setUser, splashLoading } = useAuthCtx();
   const [loaded, error] = useFonts({
     "Inter-SemiBold": require("../../assets/Fonts/Inter_18pt-SemiBold.ttf"),
@@ -28,10 +28,13 @@ const Navigation = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+      } else {
+        setUser(undefined);
       }
     });
     return unsubscribe;
-  }, [user]);
+  }, []);
+
   if (!loaded && !error) {
     return null;
   }
@@ -63,5 +66,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-
-const styles = StyleSheet.create({});

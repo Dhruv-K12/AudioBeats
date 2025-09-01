@@ -1,25 +1,55 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../Screens/Main/Home";
-import MySongs from "../Screens/Main/MySongs";
-import { colors } from "../Constants/colors";
+import MySongs from "../Screens/Main/MySongs/MySongs";
 import Feather from "@expo/vector-icons/Feather";
 import { View } from "react-native";
-import MiniPlayer from "../Components/MiniPlayer";
+import MiniPlayer from "../Components/MiniPlayer/MiniPlayer";
+import { usethemeStore } from "../Store/themeStore";
+import Entypo from "@expo/vector-icons/Entypo";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 const BottomTabs = () => {
   const Tabs = createBottomTabNavigator();
+  const colors = usethemeStore((state) => state.theme);
   return (
     <View style={{ flex: 1 }}>
-      <Tabs.Navigator screenOptions={containerConfig}>
+      <Tabs.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            backgroundColor: colors.bg,
+            borderColor: colors.bg,
+          },
+          tabBarActiveTintColor: colors.buttons,
+        }}
+      >
         <Tabs.Screen
           name="Home"
           component={Home}
-          options={homeConfig}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Ionicons
+                name={focused ? "home" : "home-outline"}
+                size={26}
+                color={colors.buttons}
+              />
+            ),
+          }}
         />
         <Tabs.Screen
           name="My Songs"
           component={MySongs}
-          options={mySongsConfig}
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Ionicons
+                name={focused ? "musical-notes" : "musical-notes-outline"}
+                size={26}
+                color={colors.buttons}
+              />
+            ),
+          }}
         />
       </Tabs.Navigator>
       <MiniPlayer />
@@ -28,26 +58,3 @@ const BottomTabs = () => {
 };
 
 export default BottomTabs;
-
-const containerConfig = {
-  headerShown: false,
-  tabBarStyle: {
-    backgroundColor: colors.bg,
-    borderColor: colors.bg,
-  },
-};
-
-const homeConfig = {
-  tabBarIcon: () => (
-    <Feather name="home" size={24} color={colors.buttons} />
-  ),
-};
-const mySongsConfig = {
-  tabBarIcon: () => (
-    <Feather
-      name="music"
-      size={24}
-      color={colors.buttons}
-    />
-  ),
-};

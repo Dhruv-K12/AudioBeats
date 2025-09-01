@@ -1,19 +1,14 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Text, StyleSheet } from "react-native";
 import React, { useState } from "react";
-import { colors } from "../../Constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { fonts } from "../../Constants/fonts";
 import AuthInput from "../../Components/AuthInput";
 import EmailIcon from "../../Components/EmailIcon";
 import PasswordIcon from "../../Components/PasswordIcon";
 import Button from "../../Components/Button";
 import { validateAuth } from "../../Utils/validateAuth";
 import { useAuthCtx } from "../../Context/AuthContext";
+import { colors } from "../../Constants/colors";
+import { fonts } from "../../Constants/fonts";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,12 +16,7 @@ const Login = () => {
   const { setLoading, setError } = useAuthCtx();
   const validateHandler = async () => {
     setLoading(true);
-    await validateAuth(
-      email,
-      password,
-      setLoading,
-      setError
-    );
+    await validateAuth(email, password, setLoading, setError);
     setLoading(false);
   };
   return (
@@ -58,9 +48,6 @@ const Login = () => {
     </SafeAreaView>
   );
 };
-
-export default Login;
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.bg,
@@ -76,5 +63,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: fonts.subHeading,
+    color: colors.primaryText,
   },
 });
+
+export default Login;

@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.subHeading,
     height: 50,
     margin: 8,
-    color: colors.buttons,
+    color: "black",
   },
 });
