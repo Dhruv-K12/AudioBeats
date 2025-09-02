@@ -46,7 +46,37 @@ A fully functional cross-platform music app built with **React Native + Expo** a
 </p>
 </details>
 
-<!-- Repeat <details> for other sections -->
+<details>
+<summary>⬆️ Bottom Sheet</summary>
+<p float="left">
+  <img src="./assets/Images/ScreenShots/BottomSheet.jpg" width="200" />
+  <img src="./assets/Images/ScreenShots/BottomSheet1.jpg" width="200" />
+</p>
+</details>
+
+<details>
+<summary>🎵 My Songs</summary>
+<p float="left">
+  <img src="./assets/Images/ScreenShots/MySongs2.jpg" width="200" />
+  <img src="./assets/Images/ScreenShots/MySongs3.jpg" width="200" />
+</p>
+</details>
+
+<details>
+<summary>🎶 Music Detail</summary>
+<p float="left">
+  <img src="./assets/Images/ScreenShots/MusicDetail.jpg" width="200" />
+  <img src="./assets/Images/ScreenShots/MusicDetail1.jpg" width="200" />
+</p>
+</details>
+
+<details>
+<summary>⚙️ Settings</summary>
+<p float="left">
+  <img src="./assets/Images/ScreenShots/Setting.jpg" width="200" />
+</p>
+</details>
+
 
 ---
 
