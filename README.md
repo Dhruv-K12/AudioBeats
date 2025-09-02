@@ -1,79 +1,103 @@
 ## 🎶 AudioBeats
 
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+[![Expo](https://img.shields.io/badge/expo-49.0.0-blue)](https://expo.dev)
+[![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-brightgreen)]()
+
 A fully functional cross-platform music app built with **React Native + Expo** and powered by **Firebase**.
+
+---
+
+## 📚 Table of Contents
+
+- [Features](#-features)
+- [Screenshots](#-screenshots)
+- [Installation](#-installation)
+- [Tech Stack](#-tech-stack)
+- [Authors](#-authors)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
 ## 🚀 Features
 
-- 🎨 **Theme Functionality**: Switch between Royal and Default themes.  
-- 🔐 **Authentication**: Sign up, log in, and log out users securely using Firebase Auth.  
-- 📂 **Playlists**: Create, delete, and manage playlists; add songs to playlists.  
-- 📥 **Offline Playback**: Download songs to play offline within the app.  
-- ❤️ **Favorites**: Add your favorite songs for quick access.  
-- 🔁 **Loop Mode**: Loop the current song or the entire playlist.  
-- 🎵 **Mini Player**: Swipe left/right to play the previous or next song.  
-- 🕑 **Recently Played**: View your recently played songs.  
-- 🔍 **Search**: Search for songs or artists quickly.  
-- 🤲 **Gesture-based Music Detail View**: Interact with the music detail screen using drag-down animation.  
+- 🎨 **Theme Functionality**: Switch between Royal and Default themes.
+- 🔐 **Authentication**: Secure user management with Firebase Auth.
+- 📂 **Playlists**: Create, delete, and manage playlists.
+- 📥 **Offline Playback**: Download songs for offline listening.
+- ❤️ **Favorites**: Quick access to favorite tracks.
+- 🔁 **Loop Mode**: Loop current song or full playlist.
+- 🎵 **Mini Player**: Swipe gestures for previous/next song.
+- 🕑 **Recently Played**: Access your play history.
+- 🔍 **Search**: Fast search for songs or artists.
+- 🤲 **Gesture-based Detail View**: Drag-down animation for music details.
 
 ---
 
-## 👨‍💻 Authors
-- [GitHub](https://github.com/Dhruv-K12)  
-- [LinkedIn](https://www.linkedin.com/in/dhruv-kumar-73590030a/)  
+## 📸 Screenshots
 
----
+<details>
+<summary>🏠 Home Tab</summary>
+<p float="left">
+  <img src="./assets/Images/ScreenShots/Home.jpg" width="200" />
+  <img src="./assets/Images/ScreenShots/Home1.jpg" width="200" />
+  <img src="./assets/Images/ScreenShots/Home2.jpg" width="200" />
+</p>
+</details>
 
-## 🛠 Tech Stack
-**Client:** TypeScript, React Native, Expo, Reanimated, Lottie, Zustand  
-**Server:** Firebase  
-
----
-📸 Screenshots
-
-🏠 Home Tab
-<p float="left"> <img src="./assets/Images/ScreenShots/Home.jpg" width="200" /> <img src="./assets/Images/ScreenShots/Home1.jpg" width="200" /> <img src="./assets/Images/ScreenShots/Home2.jpg" width="200" /> </p>
-
-📜 Bottom Sheet
-<p float="left"> <img src="./assets/Images/ScreenShots/BottomSheet.jpg" width="200" /> <img src="./assets/Images/ScreenShots/BottomSheet1.jpg" width="200" /> </p>
-
-🎵 My Songs Tab
-<p float="left"> <img src="./assets/Images/ScreenShots/MySongs2.jpg" width="200" /> <img src="./assets/Images/ScreenShots/MySongs3.jpg" width="200" /> </p>
-
-🎶 Music Detail Screen
-<p float="left"> <img src="./assets/Images/ScreenShots/MusicDetail.jpg" width="200" /> <img src="./assets/Images/ScreenShots/MusicDetail1.jpg" width="200" /> </p>
-
-⚙️ Settings Screen
-<p float="left"> <img src="./assets/Images/ScreenShots/Setting.jpg" width="200" /> </p>
+<!-- Repeat <details> for other sections -->
 
 ---
 
 ## 📦 Installation
 
-Clone the repository:
-```bash
-git clone https://github.com/Dhruv-K12/AudioBeats.git
-cd AudioBeats
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Dhruv-K12/AudioBeats.git
+   cd AudioBeats
+   ```
 
-npm install
-# or
-yarn install
+2. **Install dependencies:**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-npx expo start
+3. **Start the app:**
+   ```bash
+   npx expo start
+   ```
 
-Add Firebase configuration
+4. **Configure Firebase:**
+   - [Create a Firebase project](https://firebase.google.com/docs/web/setup).
+   - Copy your Firebase config object into `firebaseConfig.js`.
 
-Create a Firebase project.
+---
 
-Copy your Firebase config object into firebaseConfig.js (or the file where you store it).
+## 🛠 Tech Stack
 
-```
+- **Client:** TypeScript, React Native, Expo, Reanimated, Lottie, Zustand
+- **Server:** Firebase
+
+---
+
+## 👨‍💻 Authors
+
+- [Dhruv Kumar (GitHub)](https://github.com/Dhruv-K12)
+- [Dhruv Kumar (LinkedIn)](https://www.linkedin.com/in/dhruv-kumar-73590030a/)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or pull request. For major changes, please open an issue first to discuss what you would like to change.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the **MIT License** – see the [LICENSE](./LICENSE) file for details.
 
 
