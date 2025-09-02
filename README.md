@@ -116,7 +116,7 @@ A fully functional cross-platform music app built with **React Native + Expo** a
 ## 👨‍💻 Authors
 
 - [Dhruv Kumar (GitHub)](https://github.com/Dhruv-K12)
-- [Dhruv Kumar (LinkedIn)](https://www.linkedin.com/in/dhruv-kumar-73590030a/)
+- [Dhruv Kumar (LinkedIn)](https://www.linkedin.com/in/dhruv-kumar-684069268/)
 
 ---
 
