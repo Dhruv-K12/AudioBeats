@@ -60,14 +60,13 @@ npm install
 # or
 yarn install
 
+npx expo start
+
 Add Firebase configuration
 
 Create a Firebase project.
 
 Copy your Firebase config object into firebaseConfig.js (or the file where you store it).
-
-
-npx expo start
 
 ```
 
