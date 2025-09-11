@@ -16,16 +16,18 @@ import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { usethemeStore } from "../../../Store/themeStore";
 import { getStyles } from "./Style";
+import { useSongsStore } from "../../../Store/songsStore";
+import { useShallow } from "zustand/shallow";
 const MySongs = () => {
   const colors = usethemeStore((state) => state.theme);
+  const { playlist, favourite } = useSongsStore(
+    useShallow((state) => ({
+      playlist: state.playlist,
+      favourite: state.favourite,
+    }))
+  );
   const styles = getStyles(colors);
-  const {
-    downloadedSong,
-    favourite,
-    playlist,
-    setDialogAction,
-    setSelectedPlaylist,
-  } = useMainCtx();
+  const { downloadedSong, setDialogAction, setSelectedPlaylist } = useMainCtx();
   const [selected, setSelected] = useState("");
   const [data, setData] = useState<songType[]>([]);
 

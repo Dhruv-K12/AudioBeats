@@ -1,8 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SettingOption from "../../Components/SettingOption";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { fonts } from "../../Constants/fonts";
 import { useNavigation } from "@react-navigation/native";

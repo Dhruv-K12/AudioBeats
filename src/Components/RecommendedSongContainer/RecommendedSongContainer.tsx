@@ -1,4 +1,4 @@
-import { Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { playSong } from "../../Utils/playSong";
 import { recommendedSongContainerProps } from "../types";
@@ -8,8 +8,6 @@ import { ReduceMotion, withSpring } from "react-native-reanimated";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { navigationType } from "../../Types/types";
-import { colors } from "../../Constants/colors";
-import { fonts } from "../../Constants/fonts";
 import { usethemeStore } from "../../Store/themeStore";
 import { getStyles } from "./Style";
 const RecommendedSongContainer = ({

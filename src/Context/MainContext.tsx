@@ -11,29 +11,22 @@ const MainCtx = createContext<null | mainCtxType>(null);
 export const MainCtxProvider = ({ children }: authCtxProp) => {
   const player = useAudioPlayer("");
   const [tabBarHeight, setTabBarHeight] = useState(0);
-  const [songs, setSongs] = useState<songType[]>([]);
   const [currSong, setCurrSong] = useState<songType | null>(null);
   const [prevSong, setPrevSong] = useState<number[]>([]);
   const [selectedSong, setSelectedSong] = useState<songType | null>(null);
   const [downloadedSong, setDownloadedSong] = useState<songType[]>([]);
-  const [favourite, setFavourite] = useState<songType[]>([]);
-  const [recentSongs, setRecentSongs] = useState<songType[]>([]);
   const [playing, isPlaying] = useState(false);
   const height = useWindowDimensions().height;
   const translateY = useSharedValue(height / 2);
   const [queue, setQueue] = useState<songType[]>([]);
-  const [playlist, setPlaylist] = useState<playlistType[]>([]);
   const [dialogAction, setDialogAction] = useState("");
   const [selectedPlaylist, setSelectedPlaylist] = useState<playlistType | null>(
     null
   );
   const [loop, setLoop] = useState(false);
   const [searchVal, setSearchVal] = useState("");
-
   const value = {
     player,
-    songs,
-    setSongs,
     currSong,
     setCurrSong,
     prevSong,
@@ -43,18 +36,12 @@ export const MainCtxProvider = ({ children }: authCtxProp) => {
     translateY,
     downloadedSong,
     setDownloadedSong,
-    favourite,
-    setFavourite,
     playing,
     isPlaying,
-    recentSongs,
-    setRecentSongs,
     queue,
     setQueue,
     tabBarHeight,
     setTabBarHeight,
-    playlist,
-    setPlaylist,
     dialogAction,
     setDialogAction,
     selectedPlaylist,

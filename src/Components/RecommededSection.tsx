@@ -6,10 +6,12 @@ import { useMainCtx } from "../Context/MainContext";
 import { songType } from "../Types/types";
 import { searchSong } from "../Services/searchSong";
 import { usethemeStore } from "../Store/themeStore";
+import { useSongsStore } from "../Store/songsStore";
 
 const RecommededSection = () => {
   const colors = usethemeStore((state) => state.theme);
-  const { songs, currSong, searchVal } = useMainCtx();
+  const songs = useSongsStore((state) => state.songs);
+  const { currSong, searchVal } = useMainCtx();
   const [searchData, setSearchData] = useState<songType[]>([]);
   useEffect(() => {
     if (searchVal.trim().length !== 0) {
@@ -27,7 +29,7 @@ const RecommededSection = () => {
     >
       {searchVal.trim().length == 0 && (
         <Text style={[styles.heading, { color: colors.primaryText }]}>
-          Recommeded for you
+          Recomended For You
         </Text>
       )}
       <FlatList
@@ -45,7 +47,7 @@ export default RecommededSection;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 8,
+    padding: 8,
   },
   heading: {
     fontFamily: fonts.heading,

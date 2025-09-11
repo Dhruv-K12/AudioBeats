@@ -10,6 +10,7 @@ export const getStyles = (colors: themeType) => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
+      padding: 8,
     },
     logo: {
       width: 60,

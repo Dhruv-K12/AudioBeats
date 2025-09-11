@@ -1,11 +1,7 @@
 import * as FileSystem from "expo-file-system";
-import {
-  songsState,
-  songType,
-  stringState,
-} from "../Types/types";
+import { songsState, songType, stringState } from "../Types/types";
 import { saveDownloadSong } from "../Storage/saveDownloadedSong";
-
+import * as MediaLibrary from "expo-media-library";
 export const downloadSong = async (
   song: songType | null,
   setProgress: React.Dispatch<React.SetStateAction<number>>,
@@ -14,30 +10,29 @@ export const downloadSong = async (
   setDownloadedSong: songsState
 ) => {
   if (!song) return;
+  const { status } = await MediaLibrary.requestPermissionsAsync();
+  if (status !== "granted") return;
   const { artist, id, img, name, src } = song;
-  const songUri =
-    FileSystem.documentDirectory + `${name}.mp3`;
-  const imgUri =
-    FileSystem.documentDirectory + `${name}.jpg`;
-  const downloadSongResumable =
-    FileSystem.createDownloadResumable(
-      src,
-      songUri,
-      {},
-      (progress) => {
-        const percent =
-          progress.totalBytesWritten /
-          progress.totalBytesExpectedToWrite;
-        setProgress(Math.floor(percent * 100));
-      }
-    );
-  const downloadImageResumable =
-    FileSystem.createDownloadResumable(img, imgUri, {});
+  const songUri = FileSystem.documentDirectory + `${name}.mp3`;
+  const imgUri = FileSystem.documentDirectory + `${name}.jpg`;
+  const downloadSongResumable = FileSystem.createDownloadResumable(
+    src,
+    songUri,
+    {},
+    (progress) => {
+      const percent =
+        progress.totalBytesWritten / progress.totalBytesExpectedToWrite;
+      setProgress(Math.floor(percent * 100));
+    }
+  );
+  const downloadImageResumable = FileSystem.createDownloadResumable(
+    img,
+    imgUri,
+    {}
+  );
   try {
-    const resultSong =
-      await downloadSongResumable.downloadAsync();
-    const resultImage =
-      await downloadImageResumable.downloadAsync();
+    const resultSong = await downloadSongResumable.downloadAsync();
+    const resultImage = await downloadImageResumable.downloadAsync();
     if (resultImage && resultSong) {
       const song = {
         artist,

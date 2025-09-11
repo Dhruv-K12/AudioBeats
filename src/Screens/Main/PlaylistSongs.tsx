@@ -7,6 +7,7 @@ import { usethemeStore } from "../../Store/themeStore";
 const PlaylistSongs = ({ route }: any) => {
   const data = route.params.item;
   const colors = usethemeStore((state) => state.theme);
+
   return (
     <SafeAreaView
       style={{

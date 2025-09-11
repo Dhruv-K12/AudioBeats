@@ -7,6 +7,7 @@ export const getStyles = (colors: themeType) => {
       flex: 1,
       position: "absolute",
       alignItems: "center",
+      alignSelf: "center",
     },
     mainContainer: {
       width: "95%",

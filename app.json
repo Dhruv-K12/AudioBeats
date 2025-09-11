@@ -4,14 +4,15 @@
     "slug": "audiobeats",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Images/Logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "jsEngine": "hermes",
     "scheme": "audiobeats",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/Images/Logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#450403"
     },
     "ios": {
       "supportsTablet": true,
@@ -22,15 +23,24 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/Images/Logo.png",
+        "backgroundColor": "#450403"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.dhruvku12.AudioBeats"
+      "package": "com.dhruvku12.AudioBeats",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font", "expo-audio"]
+    "plugins": ["expo-font", "expo-audio"],
+    "extra": {
+      "eas": {
+        "projectId": "f30bd6d6-d008-41d6-b189-4e3dfec02aaa"
+      }
+    }
   }
 }

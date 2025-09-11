@@ -1,13 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { songsState } from "../Types/types";
+import { useSongsStore } from "../Store/songsStore";
 
-export const getRecentSongs = async (
-  setRecentSongs: songsState
-) => {
+export const getRecentSongs = async () => {
   try {
     const data = await AsyncStorage.getItem("RecentSongs");
     if (data) {
-      setRecentSongs(JSON.parse(data));
+      useSongsStore.getState().setRecentSongs(JSON.parse(data));
     }
   } catch (e) {
     console.log(e);

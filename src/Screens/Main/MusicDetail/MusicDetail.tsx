@@ -1,9 +1,6 @@
-import { BackHandler, Dimensions, Image, Text, View } from "react-native";
+import { BackHandler, Dimensions, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useMainCtx } from "../../../Context/MainContext";
 import { playAndPause } from "../../../Utils/playAndPause";
@@ -27,12 +24,14 @@ import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { rootMainStackParmList } from "../../../Navigation/type";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useSongsStore } from "../../../Store/songsStore";
 type musicDetailProps = NativeStackScreenProps<
   rootMainStackParmList,
   "MusicDetail"
@@ -42,19 +41,20 @@ const MusicDetail = ({ navigation, route }: musicDetailProps) => {
   const styles = getStyles(colors);
   const item = route.params?.item;
   const screenHeight = Dimensions.get("window").height;
-  const insetsTop = useSafeAreaInsets().top;
-  const translateY = useSharedValue(insetsTop);
+  const screenWidth = Dimensions.get("window").width;
+  const translateY = useSharedValue(0);
+  const translateXImage = useSharedValue(0);
   const { user, setError } = useAuthCtx();
   const [progress, setProgress] = useState(0);
+  const songs = useSongsStore((state) => state.songs);
+  const favourite = useSongsStore((state) => state.favourite);
   const {
     currSong,
     player,
-    songs,
     setCurrSong,
     setPrevSong,
     prevSong,
     queue,
-    favourite,
     downloadedSong,
     setDownloadedSong,
     setLoop,
@@ -144,7 +144,7 @@ const MusicDetail = ({ navigation, route }: musicDetailProps) => {
       if (translateY.value > screenHeight / 2) {
         runOnJS(goBack)();
       } else {
-        translateY.value = withSpring(insetsTop, { damping: 100 });
+        translateY.value = withSpring(0, { damping: 100 });
       }
     });
 
@@ -153,8 +153,16 @@ const MusicDetail = ({ navigation, route }: musicDetailProps) => {
     transform: [{ translateY: translateY.value }],
     opacity: interpolate(
       translateY.value,
-      [insetsTop, screenHeight / 2 - 50],
+      [0, screenHeight / 2 - 50],
       [1, 0.8]
+    ),
+  }));
+  const image = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateXImage.value }],
+    opacity: interpolate(
+      translateXImage.value,
+      [0, 150, screenWidth],
+      [1, 0.8, 0]
     ),
   }));
   useEffect(() => {
@@ -162,6 +170,11 @@ const MusicDetail = ({ navigation, route }: musicDetailProps) => {
       navigation.navigate("MusicDetail", {
         item: currSong,
       });
+      translateXImage.value = withSequence(
+        withSpring(-screenWidth, { duration: 300, stiffness: 200 }),
+        withTiming(screenWidth, { duration: 0 }),
+        withSpring(0, { mass: 0.3 })
+      );
     }
   }, [currSong?.id]);
   useFocusEffect(() => {
@@ -175,49 +188,55 @@ const MusicDetail = ({ navigation, route }: musicDetailProps) => {
     <Animated.View style={container}>
       <SafeAreaView style={[styles.container]}>
         <GestureDetector gesture={slideDownGesture}>
-          <View style={styles.header}>
-            <AntDesign
-              name="down"
-              size={26}
-              color={colors.buttons}
-              onPress={goBack}
-            />
-            <Text style={styles.headerText}>{item?.name}</Text>
-            <AntDesign
-              name="close"
-              size={26}
-              color={colors.buttons}
-              onPress={closeSong}
+          <View>
+            <View style={styles.header}>
+              <AntDesign
+                name="down"
+                size={26}
+                color={colors.buttons}
+                onPress={goBack}
+              />
+              <Text style={styles.headerText}>{item?.name}</Text>
+              <AntDesign
+                name="close"
+                size={26}
+                color={colors.buttons}
+                onPress={closeSong}
+              />
+            </View>
+
+            <Animated.Image
+              source={{ uri: item?.img }}
+              style={[styles.img, image]}
             />
           </View>
         </GestureDetector>
-        <Image source={{ uri: item?.img }} style={styles.img} />
         <PlayerSlider showDuration />
         <View style={styles.functionalityContainer}>
           <AntDesign
             name="stepbackward"
             onPress={playPreviousSongHandler}
-            size={34}
+            size={32}
             color={colors.buttons}
           />
           <AntDesign
             onPress={playSongHandler}
             name={player.currentStatus.playing ? "pausecircle" : "play"}
-            size={60}
+            size={58}
             color={colors.buttons}
           />
 
           <AntDesign
             onPress={changeSongHandler}
             name="stepforward"
-            size={34}
+            size={32}
             color={colors.buttons}
           />
         </View>
         <View style={styles.bottomContainer}>
           <AntDesign
             name={isFavouriteSong ? "heart" : "hearto"}
-            size={34}
+            size={30}
             color={colors.buttons}
             onPress={
               isFavouriteSong ? removeFavouriteHandler : addToFavouriteHandler
@@ -227,7 +246,7 @@ const MusicDetail = ({ navigation, route }: musicDetailProps) => {
           {progress == 0 || progress == 100 ? (
             <AntDesign
               name={isSongDownloaded ? "delete" : "download"}
-              size={34}
+              size={30}
               color={colors.buttons}
               onPress={
                 isSongDownloaded ? deleteSongHandler : downloadSongHandler
@@ -236,14 +255,14 @@ const MusicDetail = ({ navigation, route }: musicDetailProps) => {
           ) : (
             <Progress.Circle
               progress={progress}
-              size={34}
+              size={30}
               color={colors.buttons}
             />
           )}
           <MaterialIcons
             onPress={loopHandler}
             name="loop"
-            size={34}
+            size={30}
             color={loop ? "green" : colors.buttons}
           />
         </View>

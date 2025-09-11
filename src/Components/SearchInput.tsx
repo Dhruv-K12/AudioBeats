@@ -2,7 +2,6 @@ import { StyleSheet, TextInput, View } from "react-native";
 import React from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { fonts } from "../Constants/fonts";
-import { colors } from "../Constants/colors";
 import { useMainCtx } from "../Context/MainContext";
 const SearchInput = () => {
   const { searchVal, setSearchVal } = useMainCtx();
@@ -14,6 +13,7 @@ const SearchInput = () => {
         onChangeText={(value) => setSearchVal(value)}
         style={styles.searchInput}
         placeholder="Search songs or artist..."
+        placeholderTextColor="black"
       />
     </View>
   );

@@ -12,8 +12,6 @@ import { SharedValue } from "react-native-reanimated";
 
 export type mainCtxType = {
   player: AudioPlayer;
-  songs: songType[];
-  setSongs: songsState;
   currSong: songType | null;
   setCurrSong: songState;
   prevSong: number[];
@@ -23,18 +21,12 @@ export type mainCtxType = {
   translateY: SharedValue<number>;
   downloadedSong: songType[];
   setDownloadedSong: songsState;
-  favourite: songType[];
-  setFavourite: songsState;
   playing: boolean;
   isPlaying: booleanState;
-  recentSongs: songType[];
-  setRecentSongs: songsState;
   queue: songType[];
   setQueue: songsState;
   tabBarHeight: number;
   setTabBarHeight: React.Dispatch<React.SetStateAction<number>>;
-  playlist: playlistType[];
-  setPlaylist: React.Dispatch<React.SetStateAction<playlistType[]>>;
   dialogAction: string;
   setDialogAction: stringState;
   selectedPlaylist: playlistType | null;

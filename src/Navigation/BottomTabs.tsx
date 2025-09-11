@@ -13,6 +13,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 const BottomTabs = () => {
   const Tabs = createBottomTabNavigator();
   const colors = usethemeStore((state) => state.theme);
+
   return (
     <View style={{ flex: 1 }}>
       <Tabs.Navigator

@@ -1,19 +1,8 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
-import { playlistType } from "../Types/types";
+import { useSongsStore } from "../Store/songsStore";
 
-export const getPlaylist = (
-  uid: string,
-  setPlaylist: React.Dispatch<
-    React.SetStateAction<playlistType[]>
-  >
-) => {
+export const getPlaylist = (uid: string) => {
   const unsubscribe = onSnapshot(
     collection(db, "Playlist", uid, "Name"),
     (snapshot) => {
@@ -23,7 +12,7 @@ export const getPlaylist = (
         songs: each.data().songs,
         color: each.data().color,
       }));
-      setPlaylist(playlist);
+      useSongsStore.getState().setPlaylist(playlist);
     }
   );
   return unsubscribe;

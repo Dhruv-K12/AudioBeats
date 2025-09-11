@@ -1,7 +1,8 @@
 import { fonts } from "../../../Constants/fonts";
 import { themeType } from "../../../Store/themeStore";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 export const getStyles = (colors: themeType) => {
+  const { width, height } = Dimensions.get("window");
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -19,11 +20,13 @@ export const getStyles = (colors: themeType) => {
       fontFamily: fonts.heading,
     },
     img: {
-      width: "95%",
-      height: "42%",
-      resizeMode: "cover",
+      width: width - 24,
+      height: height / 3 + 80,
+      resizeMode: "stretch",
       borderRadius: 12,
       margin: 12,
+      borderWidth: 1,
+      borderColor: colors.buttons,
     },
     sliderContainer: {
       flexDirection: "row",
@@ -42,13 +45,14 @@ export const getStyles = (colors: themeType) => {
       width: "90%",
       alignItems: "center",
       margin: 8,
+      alignSelf: "center",
     },
     bottomContainer: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      width: "80%",
-      margin: 16,
+      width: "70%",
+      marginTop: 16,
       alignSelf: "center",
     },
   });

@@ -6,15 +6,12 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
-  StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Animated, {
   interpolate,
   runOnJS,
-  useAnimatedReaction,
   useAnimatedStyle,
-  useDerivedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -35,22 +32,17 @@ import { removeFavourite } from "../../Utils/removeFavourite";
 import { songType } from "../../Types/types";
 import { saveSongInPlaylist } from "../../Services/saveSongInPlaylist";
 import { removeSongFromPlaylist } from "../../Services/removeSongFromPlaylist";
-import { colors } from "../../Constants/colors";
-import { fonts } from "../../Constants/fonts";
 import { usethemeStore } from "../../Store/themeStore";
 import { getStyles } from "./Style";
+import { useSongsStore } from "../../Store/songsStore";
 const BottomSheet = () => {
   const colors = usethemeStore((state) => state.theme);
+  const favourite = useSongsStore((state) => state.favourite);
+  const playlist = useSongsStore((state) => state.playlist);
   const styles = getStyles(colors);
   const { setError, user } = useAuthCtx();
-  const {
-    selectedSong,
-    translateY,
-    downloadedSong,
-    setDownloadedSong,
-    favourite,
-    playlist,
-  } = useMainCtx();
+  const { selectedSong, translateY, downloadedSong, setDownloadedSong } =
+    useMainCtx();
   const [showplaylist, setShowPlaylist] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
 
@@ -126,7 +118,6 @@ const BottomSheet = () => {
       );
     }
   }, [selectedSong?.id]);
-
   return (
     selectedSong && (
       <GestureDetector gesture={slideDown}>

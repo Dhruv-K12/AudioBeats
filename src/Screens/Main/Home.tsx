@@ -17,31 +17,23 @@ import { usethemeStore } from "../../Store/themeStore";
 const Home = () => {
   const { user } = useAuthCtx();
   const colors = usethemeStore((state) => state.theme);
-  const {
-    setTabBarHeight,
-    setSongs,
-    setDownloadedSong,
-    setFavourite,
-    setRecentSongs,
-    setPlaylist,
-  } = useMainCtx();
+  const { setTabBarHeight, setDownloadedSong } = useMainCtx();
   const tabBarHeight = useBottomTabBarHeight();
   const dismissKeyboard = () => Keyboard.dismiss();
   useEffect(() => {
     const unsubscribe: (() => void)[] = [];
-    unsubscribe.push(getSongs(setSongs));
+    unsubscribe.push(getSongs());
     if (user?.uid) {
-      unsubscribe.push(getFavourite(user?.uid, setFavourite));
-      unsubscribe.push(getPlaylist(user?.uid, setPlaylist));
+      unsubscribe.push(getFavourite(user?.uid));
+      unsubscribe.push(getPlaylist(user?.uid));
     }
     setTabBarHeight(tabBarHeight);
     getDownloadedSong(setDownloadedSong);
-    getRecentSongs(setRecentSongs);
+    getRecentSongs();
     return () => {
       unsubscribe.forEach((unsub) => unsub && unsub());
     };
   }, []);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg }}>
       <Pressable style={{ flex: 1 }} onPress={dismissKeyboard}>

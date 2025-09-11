@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export const getStyles = (colors: themeType) => {
   return StyleSheet.create({
     container: {
-      width: "95%",
+      width: "98%",
       backgroundColor: colors.buttons,
       alignSelf: "center",
       borderRadius: 12,

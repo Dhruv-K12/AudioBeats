@@ -13,11 +13,11 @@ import { navigationType, songType } from "../Types/types";
 import { useNavigation } from "@react-navigation/native";
 import { playSong } from "../Utils/playSong";
 import { usethemeStore } from "../Store/themeStore";
-
+import { useSongsStore } from "../Store/songsStore";
 const RecentSection = () => {
   const colors = usethemeStore((state) => state.theme);
-  const { recentSongs, currSong, setCurrSong, player, searchVal } =
-    useMainCtx();
+  const recentSongs = useSongsStore((state) => state.recentSongs);
+  const { currSong, setCurrSong, player, searchVal } = useMainCtx();
   if (searchVal.trim().length !== 0) return;
   const navigation = useNavigation<navigationType>();
   const playSongHandler = (item: songType) => {
@@ -57,7 +57,7 @@ const RecentSection = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 8,
+    padding: 8,
   },
   heading: {
     fontFamily: fonts.heading,
@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
   btn: {
     alignItems: "center",
     justifyContent: "center",
-    margin: 8,
+    marginRight: 8,
+    marginTop: 8,
   },
   img: {
     width: 120,

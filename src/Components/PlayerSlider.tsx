@@ -8,20 +8,19 @@ import { saveRecentSong } from "../Storage/saveRecentSongs";
 import { changeSong } from "../Utils/changeSong";
 import { changeSongInQueue } from "../Utils/changeSongInQueue";
 import { usethemeStore } from "../Store/themeStore";
-
+import { useSongsStore } from "../Store/songsStore";
+import { useShallow } from "zustand/shallow";
 const PlayerSlider = ({ showDuration }: PlayerSliderProps) => {
   const colors = usethemeStore((state) => state.theme);
-  const {
-    player,
-    isPlaying,
-    setRecentSongs,
-    currSong,
-    queue,
-    setPrevSong,
-    songs,
-    setCurrSong,
-    loop,
-  } = useMainCtx();
+  const songs = useSongsStore((state) => state.songs);
+  const { recentSongs, setRecentSongs } = useSongsStore(
+    useShallow((state) => ({
+      recentSongs: state.recentSongs,
+      setRecentSongs: state.setRecentSongs,
+    }))
+  );
+  const { player, isPlaying, currSong, queue, setPrevSong, setCurrSong, loop } =
+    useMainCtx();
   const [currTime, setCurrTime] = useState("");
   const [duration, setDuration] = useState("");
   const playerStatus = useAudioPlayerStatus(player);
@@ -63,12 +62,10 @@ const PlayerSlider = ({ showDuration }: PlayerSliderProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (currSong && player.playing) {
-        setRecentSongs((songs) => {
-          const recentSongs = songs.filter((songs) => songs.id !== currSong.id);
-          const item = [currSong, ...recentSongs].slice(0, 10);
-          saveRecentSong(item);
-          return item;
-        });
+        const recent = recentSongs.filter((songs) => songs.id !== currSong.id);
+        const item = [currSong, ...recent].slice(0, 10);
+        saveRecentSong(item);
+        setRecentSongs(item);
       }
     }, 5000);
     return () => clearInterval(timer);

@@ -1,7 +1,6 @@
 import {
   Image,
   Pressable,
-  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -28,18 +27,18 @@ import PlayerSlider from ".././PlayerSlider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usethemeStore } from "../../Store/themeStore";
 import { getStyles } from "./Style";
+import { useSongsStore } from "../../Store/songsStore";
 const MiniPlayer = () => {
   const colors = usethemeStore((state) => state.theme);
   const styles = getStyles(colors);
+  const songs = useSongsStore((state) => state.songs);
   const {
     player,
     currSong,
     setCurrSong,
-    songs,
     setPrevSong,
     prevSong,
     queue,
-    isPlaying,
     tabBarHeight,
   } = useMainCtx();
   const width = useWindowDimensions().width;
@@ -96,7 +95,6 @@ const MiniPlayer = () => {
     }
     return () => {
       progress.value = withSpring(0);
-      isPlaying(false);
     };
   }, [currSong]);
   if (currSong) {

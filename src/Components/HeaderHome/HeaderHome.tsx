@@ -30,7 +30,7 @@ const HeaderHome = () => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          width: "85%",
+          width: "90%",
           alignItems: "center",
         }}
       >
